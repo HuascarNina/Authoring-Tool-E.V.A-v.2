@@ -3,6 +3,7 @@ from tkinter import *
 from urllib.request import *
 from PIL import Image, ImageTk
 
+
 # Creamos la ventana principal de la aplicación
 root = Tk()
 root.wm_title("Authoring Tool")
@@ -18,7 +19,7 @@ imagen.pack()
 urlImagen = "https://ipfs.io/ipfs/QmdA8TNjLrukkE1vCNh5avaqnsBSqKorBNkCayzQuqBKAr?filename=derechos-de-autor.png"
 
 # Descargamos la imagen y la guardamos en la ruta especificada
-urlretrieve(urlImagen, "C:/Users/Huascar Nina/Desktop/E.V.A Segundo proyecto/imagen1.png")
+urlretrieve(urlImagen, "C:/Users/Huascar Nina/Desktop/E.V.A Segundo proyecto/Proyecto python E.V.A/imagen1.png")
 
 # Creamos una etiqueta para mostrar un mensaje en la ventana
 label = Label(root, text="Hola! Bienvenido a nuestro authoring tool para crear cuestionarios")
@@ -122,7 +123,7 @@ see_quiz_button.place(x=200,y=260)
 go_scrom_button.place(x=200,y=310)
 
 # Carga la imagen original
-original_image = Image.open("imagen1.png")
+original_image = Image.open("C:/Users/Huascar Nina/Desktop/E.V.A Segundo proyecto/Proyecto python E.V.A/imagen1.png")
 
 # Redimensiona la imagen a un tamaño de 200x200
 resized_image = original_image.resize((100, 100))

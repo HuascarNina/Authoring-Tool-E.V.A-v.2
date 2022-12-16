@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Authoring Tool</title>
+        <style>
+          .question {
+            margin-bottom: 10px;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>Authoring Tool</h1>
+        <button id="add-question-button">Añadir pregunta</button>
+        <form id="quiz-form"></form>
+        <button id="export-button">Exportar a SCORM</button>
+        <script>
+          // Añade una nueva pregunta al formulario
+          function addQuestion() {
+            // Crea un contenedor para la pregunta
+            const questionContainer = document.createElement("div");
+            questionContainer.classList.add("question");
+      
+            // Crea una caja de texto para la pregunta
+            const questionInput = document.createElement("input");
+            questionInput.type = "text";
+            questionInput.placeholder = "Escribe la pregunta aquí";
+            questionInput.name = "question"
+            questionContainer.appendChild(questionInput);
+      
+            // Crea dos botones de opción verdadera y falsa
+            const trueButton = document.createElement("button");
+            trueButton.innerText = "Verdadero";
+            trueButton.value = "true";
+            const falseButton = document.createElement("button");
+            falseButton.innerText = "Falso";
+            falseButton.value = "false";
+      
+            // Crea una caja oculta para almacenar la respuesta correcta
+            const answerInput = document.createElement("input");
+            answerInput.name = "answer";
+            //answerInput2.type = "hidden";
+      
+            // Al hacer clic en uno de los botones de opción, se selecciona como respuesta correcta
+            trueButton.addEventListener("click", function() {
+              answerInput.value = trueButton.value;
+              event.preventDefault();
+            });
+            falseButton.addEventListener("click", function() {
+              answerInput.value = falseButton.value;
+              event.preventDefault();
+            });
+      
+            // Añade los botones de opción y la caja oculta a la pregunta
+            questionContainer.appendChild(trueButton);
+            questionContainer.appendChild(falseButton);
+            questionContainer.appendChild(answerInput);
+      
+            // Añade la pregunta al formulario
+            const quizForm = document.getElementById("quiz-form");
+            quizForm.appendChild(questionContainer);
+          }
+      
+          // Exporta el cuestionario a formato SCORM
+          function exportToScorm() {
+          // Obtiene las preguntas y respuestas del formulario
+          const quizForm = document.getElementById("quiz-form");
+          const elementos = quizForm.elements;
+          const questions = [];
+          for(let i = 0; i < elementos.length; i++){
+            if(elementos[i].name === 'question'){
+              questions.push(elementos[i].value);
+            }
+          }
+          const answers = [];
+          for(let i = 0; i < elementos.length; i++){
+            if(elementos[i].name === 'answer'){
+              answers.push(elementos[i].value);
+            }
+          }
+
+           // Crea un objeto con la estructura de datos de un paquete SCORM
+          const scormData = {
+              title: "Cuestionario de verdadero y falso",
+              items: questions.map((question, index) => {
+              return {
+                  identifier: `question-${index}`,
+                  title: question.value,
+                  type: "true-false",
+                  correct_responses: [{
+                  pattern: answers[index]
+                  }]
+              };
+              })
+          };
+      
+          // Convierte el objeto a formato JSON
+          const scormJson = JSON.stringify(scormData);
+      
+          // Descarga el archivo JSON
+          const a = document.createElement("a");
+          const file = new Blob([scormJson], {type: "application/json"});
+          a.href = URL.createObjectURL(file);
+          a.download = "cuestionario.json";
+          document.body.appendChild(a);
+          a.click();
+
+          const h1 = document.querySelector("h1");
+          h1.innerHTML = "Cuestionario"
+          const boton1 = document.getElementById("add-question-button");
+          const boton2 = document.getElementById("export-button")
+          boton1.style.display = "none";
+          boton2.style.display = "none";
+          const botonCalificar = document.createElement("button");
+          const botonCalificarText = document.createTextNode("Calificar");
+          botonCalificar.appendChild(botonCalificarText);
+          quizForm.appendChild(botonCalificar);
+        }
+
+          botonCalificar.addEventListener("click", function() {
+              const quizForm = document.getElementById("quiz-form");
+              const elementos = quizForm.elements;
+              const answers = [];
+              for(let i = 0; i < elementos.length; i++){
+                if(elementos[i].name === 'answer'){
+                  answers.push(elementos[i].value);
+                }
+              }
+              fetch("datos.json")
+                .then(response => response.json())
+                .then(datos => {
+                  
+                })
+              event.preventDefault();
+            });
+          
+          const addQuestionButton = document.getElementById("add-question-button");
+          addQuestionButton.addEventListener("click", addQuestion);
+          const exportButton = document.getElementById("export-button");
+          exportButton.addEventListener("click", exportToScorm);
+        
+        </script>
+      </body>
+</html>
